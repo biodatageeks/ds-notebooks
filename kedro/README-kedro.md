@@ -4,14 +4,15 @@
 ## Workshop goals
 
 1. Learn how to use Kedro for building reproducible, maintainable, and modular data pipelines.
-2. Learn how to use PySpark (local mode and deployed on YARN) for data processing together with Kedro.
+2. Learn how to use PySpark (local mode and deployed on Kubernetes) for data processing together with Kedro.
 3. Learn how to use MLflow for tracking experiments and managing machine learning models.
 4. Learn how to use Kedro-Viz for visualizing the data pipeline.
 
 ## Prerequisites
 * Access to the GitHub account
-* 
-* Run labs in the VSCode server available in your VertexAI Workbench Jupyter Lab
+* Web browser, Google Chrome preferred
+* Run labs in the VSCode server available in the Launchpad of your Jupyter Lab in lab.biodatageeks.com
+
 
 ## Task 1. Setup Kedro project, run the pipeline locally 
 
@@ -27,7 +28,6 @@ Restart the bash session after running the above command.
 ```bash 
 conda create --name mlops-ds python=3.8 -y
 ```
-
 
 
 3. Activate the conda environment
@@ -70,6 +70,7 @@ pip install -r requirements.txt
 ```
 
 This step will last for ~10 minutes. Meanwhile, you can explore the kedro project structure and content, and continue with the next steps.
+
 9. Run the MLflow UI
 
 For running the Mlflow instance, you need to click the *MLflow* card in the Launcher tab in the JupyterLab environment.
@@ -79,7 +80,9 @@ For running the Mlflow instance, you need to click the *MLflow* card in the Laun
 ```bash
 kedro run
 ```
+
 11. Check experiment runs in MLflow
+
 12. What Kedro environment is used by default? How to change it?
 
 ## Task 2. Run Kedro pipelines on a Dataproc cluster in a YARN-client mode
@@ -89,8 +92,8 @@ kedro run
 ```bash
 # change the USER_ID to your username
 export USER_ID=mwiewior
-export DEV_MLOPS_ENV=yarn-dev
-export DEV_BUCKET=gs://adac-mlops-${DEV_MLOPS_ENV}-${USER_ID}
+export DEV_MLOPS_ENV=k8s-dev
+export DEV_BUCKET=gs://ds-mlops-${DEV_MLOPS_ENV}-${USER_ID}
 gsutil mb -l europe-west1 $DEV_BUCKET
 ```
 2. Copy the raw data to the newly created bucket
@@ -134,7 +137,7 @@ Important: Take the screenshot of the Kedro pipeline visualization to the docume
 
 ```bash
 export PRD_MLOPS_ENV=yarn-prd
-export PRD_BUCKET=gs://adac-mlops-${PRD_MLOPS_ENV}-${USER_ID}
+export PRD_BUCKET=gs://ds-mlops-${PRD_MLOPS_ENV}-${USER_ID}
 gsutil mb -l europe-west1 $PRD_BUCKET
 ```
 
