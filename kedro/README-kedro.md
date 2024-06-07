@@ -124,8 +124,6 @@ Hint: there might another pop-up window from VSCode asking you to allow the port
 
 5. To stop kedro viz press `Ctrl+C` in the terminal where you run the `kedro viz` command.
 
-Important: Take the screenshot of the Kedro pipeline visualization to the documentation.
-
 ## Task 4. Create a new Kedro environment for the Kubernetes cluster
 
 1. Create an additional bucket for new Kedro environment
@@ -150,12 +148,9 @@ gsutil cp -r ${DEV_BUCKET}/data/01_raw/* ${PRD_BUCKET}/data/01_raw/
 - change the parameters in files of the `k8s-prd` directory to:
   - point to the new bucket
   - increase the number of executors (to 2)
-  - increase the driver memory (to 4GB) and executor memory (to 2GB)
   - change the `random_state` to the dirfferent value and the `test_size` to 0.15
 
 Hint: Configuration files in new directory inherit after the `base` directory. You can overwrite the parameters in the new directory.
-
-Important: Gather changed code snippets to the documentation
 
 ## Task 5. Run model training and inference on the Dataproc cluster
 
@@ -169,32 +164,8 @@ kedro run --env=k8s-prd
 
 To open the MLflow UI in the JupyterLab environment, click on the MLFlow card in the Launcher tab.
 
-Important: Take the screenshot of all runs to the documentation.
-
-3. Register the production model in MLflow Model Registry UI
+1. Register the production model in MLflow Model Registry UI
 
 To register the model, you need to click the *Register* button in the detailed model view, in the MLflow UI.
 
 Name of the model: `ds-kedro-model`
-
-4. Prepare the batch inference pipeline
-
-- create a new pipeline folder in the `src/ds_kedro_pyspark` directory called `batch_inference`
-- copy the code snippet for Pandas predictions from the MLflow UI (*Artifacts* tab) to the `inference_model()` function in `nodes.py`
-- in the configuration of used environment (can be for example `k8s-prd`), add the parameters of the new pipeline to `parameters_batch_inference.yml`
-- create 3 nodes in the `batch_inference` pipeline:
-  - `get_inference_data` - to get X array for making predictions from the `01_raw` directory in a randomized way
-  - `inference_model` - to predict the target values using the loaded model
-  - `save_to_file` - to save the predictions to the `07_model_output` directory
-- connect the nodes in the `batch_inference` pipeline in the `pipeline.py` file (you can use the input variables from outputs of other pipelines)
-- run the batch inference using the `kedro run --env=k8s-prd --pipeline=batch_inference` command
-
-Important: Take the screenshot of the batch inference run to the documentation.
-
-## Task 6. Send the prepared documentation
-
-Please send the prepared PDF documentation in the Microsoft Teams assignment.
-
-## Task 7. Destroy the infrastructure
-
-Important step!
