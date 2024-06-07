@@ -85,7 +85,7 @@ kedro run
 
 12. What Kedro environment is used by default? How to change it?
 
-## Task 2. Run Kedro pipelines on a Dataproc cluster in a YARN-client mode
+## Task 2. Run Kedro pipelines on a Kubernetes cluster in a K8S-client mode
 
 1. Create a new bucket in the same region as the rest of the infrastructure
 
@@ -102,17 +102,12 @@ gsutil mb -l europe-west1 $DEV_BUCKET
 gsutil cp -r data/01_raw/* ${DEV_BUCKET}/data/01_raw/
 ```
 
-3. Run the Kedro pipeline using `yarn-dev` (ensure that `DEV_BUCKET` environment variable is set correctly)
+3. Run the Kedro pipeline using `k8s-dev` (ensure that `DEV_BUCKET` environment variable is set correctly)
 
 ```bash
-kedro run --env=yarn-dev
+kedro run --env=k8s-dev
 ```
 4. Check the experiment runs in MLflow 
-5. Setup tunneling to the Dataproc cluster and port forwarding for YARN console and
-Spark Application UI (VSCode automatically detects 4040 port).
-Hint: Workshop 1
-![img.png](doc/figures/kedro-pyspark-yarn.png)
-![img.png](doc/figures/spark-ui-yarn.png)
 
 
 ## Task 3. Visualize the Kedro pipeline
@@ -131,28 +126,28 @@ Hint: there might another pop-up window from VSCode asking you to allow the port
 
 Important: Take the screenshot of the Kedro pipeline visualization to the documentation.
 
-## Task 4. Create a new Kedro environment for the Dataproc cluster
+## Task 4. Create a new Kedro environment for the Kubernetes cluster
 
 1. Create an additional bucket for new Kedro environment
 
 ```bash
-export PRD_MLOPS_ENV=yarn-prd
+export PRD_MLOPS_ENV=k8s-prd
 export PRD_BUCKET=gs://ds-mlops-${PRD_MLOPS_ENV}-${USER_ID}
 gsutil mb -l europe-west1 $PRD_BUCKET
 ```
 
-2. Copy data from the `yarn-dev` bucket to the `yarn-prd` bucket
+2. Copy data from the `k8s-dev` bucket to the `k8s-prd` bucket
 
 Before executing this command check if the `DEV_BUCKET` and `PRD_BUCKET` environment variables are set correctly.
 ```bash
 gsutil cp -r ${DEV_BUCKET}/data/01_raw/* ${PRD_BUCKET}/data/01_raw/
 ```
 
-3. Create a new configuration for `yarn-prd` environment
+3. Create a new configuration for `k8s-prd` environment
 
-- in the `adac-kedro-psypark/conf` create new `yarn-prd` directory
-- copy the content of the `yarn-dev` directory to the `yarn-prd` directory
-- change the parameters in files of the `yarn-prd` directory to:
+- in the `ds-kedro-psypark/conf` create new `k8s-prd` directory
+- copy the content of the `k8s-dev` directory to the `k8s-prd` directory
+- change the parameters in files of the `k8s-prd` directory to:
   - point to the new bucket
   - increase the number of executors (to 2)
   - increase the driver memory (to 4GB) and executor memory (to 2GB)
@@ -164,10 +159,10 @@ Important: Gather changed code snippets to the documentation
 
 ## Task 5. Run model training and inference on the Dataproc cluster
 
-1. Run the Kedro pipeline using `yarn-prd` environment
+1. Run the Kedro pipeline using `k8s-prd` environment
 
 ```bash
-kedro run --env=yarn-prd
+kedro run --env=k8s-prd
 ```
 
 2. Check the experiment runs in MLflow Experiment tracking UI
@@ -184,15 +179,15 @@ Name of the model: `ds-kedro-model`
 
 4. Prepare the batch inference pipeline
 
-- create a new pipeline folder in the `src/adac_kedro_pyspark` directory called `batch_inference`
+- create a new pipeline folder in the `src/ds_kedro_pyspark` directory called `batch_inference`
 - copy the code snippet for Pandas predictions from the MLflow UI (*Artifacts* tab) to the `inference_model()` function in `nodes.py`
-- in the configuration of used environment (can be for example `yarn-prd`), add the parameters of the new pipeline to `parameters_batch_inference.yml`
+- in the configuration of used environment (can be for example `k8s-prd`), add the parameters of the new pipeline to `parameters_batch_inference.yml`
 - create 3 nodes in the `batch_inference` pipeline:
   - `get_inference_data` - to get X array for making predictions from the `01_raw` directory in a randomized way
   - `inference_model` - to predict the target values using the loaded model
   - `save_to_file` - to save the predictions to the `07_model_output` directory
 - connect the nodes in the `batch_inference` pipeline in the `pipeline.py` file (you can use the input variables from outputs of other pipelines)
-- run the batch inference using the `kedro run --env=yarn-prd --pipeline=batch_inference` command
+- run the batch inference using the `kedro run --env=k8s-prd --pipeline=batch_inference` command
 
 Important: Take the screenshot of the batch inference run to the documentation.
 
