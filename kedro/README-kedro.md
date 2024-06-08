@@ -33,7 +33,7 @@ conda create -p /home/jovyan/envs/mlops-ds python=3.8 -y
 3. Activate the conda environment
 
 ```bash
-conda activate mlops-ds
+conda activate /home/jovyan/envs/mlops-ds
 ```
 
 4. Install Kedro
