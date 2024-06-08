@@ -26,7 +26,7 @@ Restart the bash session after running the above command.
 2. Create Anaconda environment (Python 3.8 because of the compatibility with Python running on Dataproc cluster)
 
 ```bash 
-conda create --name mlops-ds python=3.8 -y
+conda create -p /home/jovyan/envs/mlops-ds python=3.8 -y
 ```
 
 
